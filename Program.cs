@@ -6,39 +6,48 @@ using System.Threading.Tasks;
 
 namespace project_student1
 {
-    class student
+  class Person
     {
-        public int stnumber=0;
-        public int stage;
-        public string stname;
-        public string sex;
-        public float quizz1;
-        public float quizz2;
-        public float assigment;
-        public float midterm;
-        public float final;
-        public float total;
-        static public int itemcount = -1;
-        public student()
+        public static int Id = 0;
+        public static string name = null;
+        public static int age=0;
+        public static string sex = null;
+        public virtual int Age(int a);
+        public virtual string Stage();
+    }// end of person class
+  // student class 
+  class Student : Person
+  {
+      public float quizz1 = 0;
+      public float quizz2 = 0;
+      public float assigment = 0;
+      public float midterm = 0;
+      public float final = 0;
+      public float total = 0;
+      static public int itemcount = -1;
+      public Student()
+      {
+          Console.Write("Enter student's ID:");
+          Person.Id = int.Parse(Console.ReadLine());
+          Console.Write("Enter the student name : ");
+          Person.name = Console.ReadLine();
+          //Person.age = age(the student age in this case) 
+          Console.Write("Enter student's age:");
+          Person.age = int.Parse(Console.ReadLine());
+          while (Person.age < 0)
+          {
+              Console.Write("You have enter a wrong age!!\n ReEnter student's Age:");
+              Person.age = int.Parse(Console.ReadLine());
+          }
+          Console.Write("Enter student's Sex(F or M):");
+          Person.sex = Console.ReadLine().ToString();
+      }
+        public Student(int stnumber, int stage, string stname, string sex, float quizz1, float quizz2, float assigment, float midterm, float final, float total)
         {
-            
-            stnumber = 0;
-            stage = 0;
-            stname = "no name";
-            sex = null;
-            quizz1 = 0;
-            quizz2 = 0;
-            assigment = 0;
-            midterm = 0;
-            final = 0;
-            total = 0;
-        }
-        public student(int stnumber, int stage, string stname, string sex, float quizz1, float quizz2, float assigment, float midterm, float final, float total)
-        {
-            this.stnumber = stnumber;
-            this.stage = stage;
-            this.stname = stname;
-            this.sex = sex;
+            this.Person.Id = stnumber;
+            this.Person.age = stage;
+            this.Person.name = stname;
+            this.Person.sex = sex;
             this.quizz1 = quizz1;
             this.quizz2 = quizz2;
             this.assigment = assigment;
@@ -49,7 +58,7 @@ namespace project_student1
     }//end the class student 
     class Initial
     {
-        student[] st = new student[30];
+        Student[] st = new Student[30];
           public  int itemcount = 0;
         public void displaymenu()
         {
@@ -110,24 +119,32 @@ namespace project_student1
                 confirm = Console.ReadLine().ToString();
             } while (confirm == "y" || confirm == "Y");
         }//end the desplay menu
+       public override int Age(int a)
+      	{
+          if (a < 0 )
+              a = a * -1;
+          else 
+          {
+              if (a > 25)
+                  Console.WriteLine("Not allowed !!");
+          }
+          return a;
+     	 }
         public void add(ref int itemcount)
         {
-          
             Console.WriteLine(itemcount);
             Console.Write("Enter student's ID:");
-           int stnumber= int.Parse(Console.ReadLine());
-            Console.Write("Enter student's St age:");
-            int stage = int.Parse(Console.ReadLine());
-            while (stage < 0)
-            {
-                Console.Write("You have enter a wrong age!!\n ReEnter student's Age:");
-                stage = int.Parse(Console.ReadLine());
-            }
-            Console.Write("Enter student's Name:");
-            string stname = Console.ReadLine().ToString();
+            Person.Id = int.Parse(Console.ReadLine());
+            
+           Console.Write("Enter student's age:");
+	   Person.age=int.Parse(Console.ReadLine());
+           Age(age);
+            
+	    Console.Write("Enter student's Name:");
+            Person.name = Console.ReadLine().ToString();
 
             Console.Write("Enter student's Sex(F or M):");
-           string sex = Console.ReadLine().ToString();
+            Person.sex = Console.ReadLine().ToString();
 
             Console.Write("Enter student's quizz1 score:");
             float quizz1 = float.Parse(Console.ReadLine());
@@ -139,30 +156,31 @@ namespace project_student1
             float assigment = float.Parse(Console.ReadLine());
 
             Console.Write("Enter student's mid term score:");
-           float midterm = float.Parse(Console.ReadLine());
-            Console.Write("Enter student's final score:");
+            float midterm = float.Parse(Console.ReadLine());
+           
+	    Console.Write("Enter student's final score:");
             float final = float.Parse(Console.ReadLine());
             
              float total = quizz1 + quizz2 + assigment + midterm +final;
-            st[itemcount] = new student(stnumber, stage, stname, sex, quizz1, quizz2, assigment, midterm, final, total);
+            st[itemcount] = new student(Person.Id, Person.age, Person.name, Person.sex, quizz1, quizz2, assigment, midterm, final, total);
             itemcount++;
         }//end the added information 
-        public int search(student[] st, int id, int itemcount)
+        public int search(Student[] st, int id, int itemcount)
         {
             int found = -1;
             for (int i = 0; i < itemcount && found == -1; i++)
             { 
-                if (st[i].stnumber == id) found = i;
+                if (st[i].Person.Id == id) found = i;
                 else found = -1;
             }
             return found;
         }//end the search function 
-        static void clean(student[] st, int index)
+        static void clean(Student[] st, int index)
         {
-            st[index].stnumber = 0;
-            st[index].stage = 0;
-            st[index].stname = null;
-            st[index].sex = null;
+            st[index].Person.Id = 0;
+            st[index].Person.age = 0;
+            st[index].Person.name = null;
+            st[index].Person.sex = null;
             st[index].quizz1 = 0;
             st[index].quizz2 = 0;
             st[index].assigment = 0;
@@ -170,7 +188,7 @@ namespace project_student1
             st[index].final = 0;
             st[index].total = 0;
         }
-        public void delete(student[] st, ref int itemcount)
+        public void delete(Student[] st, ref int itemcount)
         {
             int id;
             int index;
@@ -201,9 +219,9 @@ namespace project_student1
             }
             else Console.WriteLine("No record to delete");
         }
-        public void viewall(student[] st, int itemcount)
+	    
+        public void viewall(Student[] st, int itemcount)
         {
-
             int i = 0;
 
             Console.WriteLine("{0,-5}{1,-20}{2,-5}{3,-5}{4,-5}{5,-5}{6,-5}{7,-5}{8}(column index)", "0", "1", "2", "3", "4", "5", "6", "7", "8");
@@ -211,9 +229,9 @@ namespace project_student1
             Console.WriteLine("=====================================================");
             while (i < itemcount)
             {
-                if (st[i].stnumber != -1)
+                if (st[i].Person.Id != -1)
                 {
-                    Console.Write("{0,-5}{1,-20}{2,-5}", st[i].stnumber, st[i].stname, st[i].sex);
+                    Console.Write("{0,-5}{1,-20}{2,-5}", st[i].Person.Id, st[i].Person.name, st[i].Person.sex);
                     Console.Write("{0,-5}{1,-5}{2,-5}", st[i].quizz1, st[i].quizz2, st[i].assigment);
                     Console.Write("{0,-5}{1,-5}{2,-5}", st[i].midterm, st[i].final, st[i].total);
                     Console.Write("\n");
@@ -221,7 +239,7 @@ namespace project_student1
                 i = i + 1;
             }
         }
-        public void update(student[] st, int itemcount)
+        public void update(Student[] st, int itemcount)
         {
             int id;
             int column_index;
@@ -236,12 +254,12 @@ namespace project_student1
                 if (column_index == 1)
                 {
                     Console.Write("Enter student's Name:");
-                    st[index].stname = Console.ReadLine().ToString();
+                    st[index].Person.name = Console.ReadLine().ToString();
                 }
                 else if (column_index == 2)
                 {
                     Console.Write("Enter student's Sex(F or M):");
-                    st[index].sex = Console.ReadLine().ToString();
+                    st[index].Person.sex = Console.ReadLine().ToString();
                 }
                 else if (column_index == 3)
                 {
@@ -271,14 +289,14 @@ namespace project_student1
                 else if (column_index == 8)
                 {
                     Console.Write("Enter student's Age:");
-                    st[index].stage = int.Parse(Console.ReadLine());
+                    st[index].Person.age = int.Parse(Console.ReadLine());
                 }
                 else Console.WriteLine("Invalid column index");
-                st[index].total = st[index].quizz1 + st[index].quizz2 + st[index].assigment + st[index].midterm + st[index].final + st[index].stage;
+                st[index].total = st[index].quizz1 + st[index].quizz2 + st[index].assigment + st[index].midterm + st[index].final ;
             }
             else Console.WriteLine("The record deosn't exits.Check the ID and try again.");
         }
-        public void average(student[] st, int itemcount)
+        public void average(Student[] st, int itemcount)
         {
             int id;
             float avg = 0;
@@ -292,7 +310,7 @@ namespace project_student1
             }
             Console.WriteLine("The average score is {0}.", avg);
         }
-        public void showmax(student[] st, int itemcount)
+        public void showmax(Student[] st, int itemcount)
         {
             float max = st[0].total;
             int index = 0;
@@ -312,10 +330,10 @@ namespace project_student1
                 max = st[0].total;
             }
             else Console.WriteLine("Not record found!");
-            if (index != -1) Console.WriteLine("The student with ID:{0} gets the highest score {1}.", st[index].stnumber, max);
+            if (index != -1) Console.WriteLine("The student with ID:{0} gets the highest score {1}.", st[index].Person.Id, max);
         }
         //method to show min total score
-        public void showmin(student[] st, int itemcount)
+        public void showmin(Student[] st, int itemcount)
         {
             float min = st[0].total;
             int index = 0;
@@ -334,10 +352,10 @@ namespace project_student1
                 min = st[0].total;
             }
             else Console.WriteLine("No record found!");
-            if (index != -1) Console.WriteLine("The student with ID:{0} gets the lowest score {1}.", st[index].stnumber, min);
+            if (index != -1) Console.WriteLine("The student with ID:{0} gets the lowest score {1}.", st[index].Person.Id, min);
         }
         //method to find record
-        public void find(student[] st, int itemcount)
+        public void find(Student[] st, int itemcount)
         {
             int id;
             Console.Write("Enter student's ID:");
@@ -345,52 +363,62 @@ namespace project_student1
             int index = search(st, id, itemcount);
             if (index != -1)
             {
-                Console.Write("{0,-5}{1,-20}{2,-5}", st[index].stnumber, st[index].stname, st[index].sex);
+                Console.Write("{0,-5}{1,-20}{2,-5}", st[index].Person.Id, st[index].Person.name, st[index].Person.sex);
                 Console.Write("{0,-5}{1,-5}{2,-5}", st[index].quizz1, st[index].quizz2, st[index].assigment);
                 Console.Write("{0,-5}{1,-5}{2,-5}", st[index].midterm, st[index].final, st[index].total);
                 Console.WriteLine();
             }
             else Console.WriteLine("The record doesn't exits.");
         }
-        public void bubblesort(student[] dataset, int n)
+        public void bubblesort(Student[] dataset, int n)
         {
             int i, j;
             for (i = 0; i < n; i++)
                 for (j = n - 1; j > i; j--)
                     if (dataset[j].total < dataset[j - 1].total)
                     {
-                        student temp = dataset[j];
+                        Student temp = dataset[j];
                         dataset[j] = dataset[j - 1];
                         dataset[j - 1] = temp;
                     }
 	}
-    } //end the intial student 
-	 class Teacher
-    {
-        public string teachId;
-        public string teachname;
-        public int teachAge;
-        public string teachDept;
-        public string teachingstage;
-        public string teachsex;
-        public Teacher()
-        {
-            this.teachId = null;
-            this.teachname = null;
-            this.teachAge = -1;
-            this.teachDept = null;
-            this.teachingstage = null;
-            this.teachsex = null;
+    } //end the intial student
+     // the Teacher class
+    class Teacher : Person
+  {
+      public string teachDept = null;
+      public string teachingstage = null;
 
-        }
+      public Teacher()
+      {
+          Console.Write("Enter the Teacher name : ");
+          Person.name = Console.ReadLine();
+
+          Console.Write("Enter Teacher's ID:");
+          Person.Id = int.Parse(Console.ReadLine());
+          //Person.age = age(the student age) 
+          Console.Write("Enter Teacher's age:");
+          Person.age = int.Parse(Console.ReadLine());
+          Age(age);
+	  
+          Console.Write("Enter Teacher's Sex(F or M):");
+          Person.sex = Console.ReadLine().ToString();
+
+          Console.Write("Enter which Department the Teacher's graduated from");
+          teachDept = Console.ReadLine().ToString();
+
+          Console.Write("Enter the Teacher's Which class giveing lessons");
+          teachingstage = Console.ReadLine().ToString();
+      
+      }
         public Teacher(string teachId, string teachname, int teachAge, string teachDept, string teachingstage, string teachsex)
         {
-            this.teachId = teachId;
-            this.teachname = teachname;
-            this.teachAge = teachAge;
+            this.Person.Id = teachId;
+            this.Person.name = teachname;
+            this.Person.age = teachAge;
             this.teachDept = teachDept;
             this.teachingstage = teachingstage;
-            this.teachsex = teachsex;
+            this.Person.sex = teachsex;
         }
     }
 	 class InitialTeacher
@@ -467,35 +495,55 @@ namespace project_student1
             int found = -1;
             for (int i = 0; i < itemcount && found == -1; i++)
             {
-                if (te[i].teachId == id)
+                if (te[i].Person.Id == id)
                     found = i;
                 else
                     found = -1;
             }
             return found;
         }
-        public void add( ref int itemcount)
-    {
+	public override int Age(int a)
+        {
+          if (a < 0)
+          {
+              a = a * -1;
+          }
+          else
+          {
+              if (a < 20 && a > 80)
+                  Console.WriteLine("Not allowed !!");
+          }
+          return a;
+      }
+		 
+      public void add( ref int itemcount)
+      {
         Again:
         Console.WriteLine();
         Console.Write("Enter Teacher's ID:");
-        string teachId = Console.ReadLine().ToString();
+        Person.Id = Console.ReadLine().ToString();
         if (search(te, teachId, itemcount)!=-1)
         {
             Console.WriteLine("This ID already exists.");
             goto Again;
         }
         Console.Write("Enter Teacher's Name:");
-        string teachname = Console.ReadLine();
-        Console.Write("Enter Teacher's Sex(F or M):");
-       string teachsex = Console.ReadLine();
+        Person.name = Console.ReadLine();
+       
+	Console.Write("Enter Teacher's Sex(F or M):");
+        Person.sex = Console.ReadLine();
+	      
         Console.Write("Enter Teacher's Age:");
-      int teachAge = int.Parse(Console.ReadLine());
+	Person.age=int.Parse(Console.ReadLine());
+        Age(age);
+	      
         Console.Write("Enter student's dept:");
-      string teachDept = Console.ReadLine();
+        teachDept = Console.ReadLine();
+	      
         Console.Write("Enter student's teaching stage:");
-        string teachingstage = Console.ReadLine();
-        te[itemcount] = new Teacher(teachId, teachname, teachAge, teachDept, teachingstage, teachsex);
+        teachingstage = Console.ReadLine();
+	      
+        te[itemcount] = new Teacher(Person.Id, Person.name, Person.age, teachDept, teachingstage, Person.sex);
         ++itemcount;
     }
         static void delete(Teacher[] te, ref int itemcount)
@@ -532,10 +580,10 @@ namespace project_student1
 
         static void clean(Teacher[] te, int index)
         {
-            te[index].teachId = null;
-            te[index].teachname = null;
-            te[index].teachsex = null;
-            te[index].teachAge = -1;
+            te[index].Person.Id = null;
+            te[index].Person.name = null;
+            te[index].Person.sex = null;
+            te[index].Person.age = -1;
             te[index].teachDept = null;
             te[index].teachingstage = null;
         }
@@ -557,18 +605,18 @@ namespace project_student1
                 {
                     Console.Write("Enter Teacher's Name:");
 
-                    te[index].teachname = Console.ReadLine().ToString();
+                    te[index].Person.name = Console.ReadLine().ToString();
                 }
 
                 else if (column_index == 2)
                 {
                     Console.Write("Enter Teacher's Sex(F or M):");
-                    te[index].teachsex = Console.ReadLine().ToString();
+                    te[index].Person.sex = Console.ReadLine().ToString();
                 }
                 else if (column_index == 3)
                 {
                     Console.Write("Enter Teacher's Age:");
-                    te[index].teachAge = int.Parse(Console.ReadLine());
+                    te[index].Person.age = int.Parse(Console.ReadLine());
                 }
                 else if (column_index == 4)
                 {
@@ -586,18 +634,18 @@ namespace project_student1
         public static string ID(Teacher[] te, int itemcount)
         {
            
-            if (te[itemcount].teachId == null)
+            if (te[itemcount].Person.Id == null)
             {
-                Console.WriteLine("there is no teacher yet !!!");
+                Console.WriteLine("there is no teacher has this Id yet !!!");
             }
-            return te[itemcount].teachId;
+            return te[itemcount].Person.Id;
         }
         public static string showteachDept(Teacher[] te, int itemcount)
         {
             
             if (te[itemcount].teachDept == null)
             {
-                Console.WriteLine("there is no teacher yet !!!");
+                Console.WriteLine("there is no teacher like this yet !!!");
             }
             return te[itemcount].teachDept;
         }
@@ -615,20 +663,20 @@ namespace project_student1
         public static int showteachAge(Teacher[] te, int itemcount)
         {
             
-            if (te[itemcount].teachAge == -1)
+            if (te[itemcount].Person.age == -1)
             {
                 Console.WriteLine("there is no teacher yet !!!");
             }
-            return te[itemcount].teachAge;
+            return te[itemcount].Person.age;
         }
         public static string showteachsex(Teacher[] te, int itemcount)
         {
             
-            if (te[itemcount].teachsex == null)
+            if (te[itemcount].Person.sex == null)
             {
                 Console.WriteLine("there is no teacher yet !!!");
             }
-            return te[itemcount].teachsex;
+            return te[itemcount].Person.sex;
         }
         public void viewall(Teacher[] te, int itemcount)
         {
@@ -640,8 +688,8 @@ namespace project_student1
             {
                 if (te[i].teachId != null)
                 {
-                    Console.Write("{0,-5}{1,-20}{2,-5}", te[i].teachId, te[i].teachname, te[i].teachsex);
-                    Console.Write("{0,-5}{1,-5}{2,-5}", te[i].teachAge, te[i].teachDept, te[i].teachingstage);
+                    Console.Write("{0,-5}{1,-20}{2,-5}", te[i].Person.Id, te[i].Person.name, te[i].Person.sex);
+                    Console.Write("{0,-5}{1,-5}{2,-5}", te[i].Person.age, te[i].teachDept, te[i].teachingstage);
                     Console.Write("\n");
                 }
                 i = i + 1;
@@ -649,7 +697,8 @@ namespace project_student1
         }
 		
     } //end the initial student
-    class SchoolInformation   //////////////
+	// the school info.
+    class SchoolInformation  
     {
         // return a string consisting of four or five lines of school infromation
 
@@ -702,7 +751,7 @@ year +"\n"+
         {
             SchoolInformation school = new SchoolInformation();
             SchoolInformation.PrintSchoolInformation();
-            student s1 = new student();
+            Student s1 = new Student();
             Initial I1 = new Intial();
             I1.displaymenu();
             InitialTeacher I1T=new IntialTeacher();
